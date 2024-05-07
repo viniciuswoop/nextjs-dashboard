@@ -5,21 +5,16 @@ import { lusitana } from '@/app/ui/fonts';
 import { fetchRevenue, fetchLatestInvoices, countInvoices, sumInvoicesByStatus, countCustomers } from '@/app/lib/data';
 
 export default async function Page(){
-    const revenuePromise = fetchRevenue();
-    const latestInvoicesPromise = fetchLatestInvoices();
-    const invoiceCountPromise = countInvoices();
-    const totalPaidInvoicesPromise = sumInvoicesByStatus('paid');
-    const totalPendingInvoicesPromise = sumInvoicesByStatus('pending');
-    const numberOfCustomersPromise =  countCustomers();
 
     const data = await Promise.all([
-        invoiceCountPromise,
-        totalPaidInvoicesPromise,
-        totalPendingInvoicesPromise,
-        numberOfCustomersPromise,
-        revenuePromise,
-        latestInvoicesPromise
+        countInvoices(),
+        sumInvoicesByStatus('paid'),
+        sumInvoicesByStatus('pending'),
+        countCustomers(),
+        fetchRevenue(),
+        fetchLatestInvoices()
       ]);
+      
     return(
         <main>
             <h1 className={`${lusitana.className} mb-4 text-xl md:text-2x1`}>
