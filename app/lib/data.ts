@@ -7,8 +7,42 @@ import {
   LatestInvoiceRaw,
   User,
   Revenue,
+  Invoice,
 } from './definitions';
 import { formatCurrency } from './utils';
+
+export async function countInvoices(){
+  
+  try{ 
+    const data = await sql`SELECT COUNT(*) as total FROM invoices`;
+    return data.rows[0].total;
+  }catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to count invoices data.');
+  }
+}
+
+export async function sumInvoicesByStatus(status : string){
+  
+  try{ 
+    const data = await sql`SELECT SUM(amount) as total FROM invoices WHERE status = ${status}`;
+    return formatCurrency(data.rows[0].total);
+  }catch (error) {
+    console.error('Database Error:', error);
+    throw new Error(`Failed to count ${status} invoices data.`);
+  }
+
+}
+
+export async function countCustomers(){
+  try{ 
+    const data = await sql`SELECT COUNT(*) FROM customers`;
+    return data.rows[0].count;
+  }catch (error) {
+    console.error('Database Error:', error);
+    throw new Error(`Failed to count customer data.`);
+  }
+}
 
 export async function fetchRevenue() {
   // Add noStore() here to prevent the response from being cached.
